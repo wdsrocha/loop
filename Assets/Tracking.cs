@@ -20,16 +20,24 @@ public class Tracking : MonoBehaviour
 
     public GameObject restartPanel;
 
-    //public GameObject effect;
-    //List<GameObject> trail;
+    public GameObject effect;
+    List<GameObject> trail;
 
-    string getTextScore(int points) {
+    private string getTextScore(int points)
+    {
         return $"Score: {points:0000}";
-	}
+    }
 
-    void Start() {
+    private void gameOver()
+    {
+        isStopped = true;
+        restartPanel.SetActive(true);
+    }
+
+    void Start()
+    {
         scoreText.text = getTextScore(0);
-	 }
+    }
 
     void Update()
     {
@@ -49,11 +57,13 @@ public class Tracking : MonoBehaviour
 
         maxDiff = Mathf.Max(maxDiff, diff);
 
-        if (diff >= 2f) {
-            restartPanel.SetActive(true);
-        }
-		
-		if (touch.phase == TouchPhase.Began)
+		if (diff >= 2f)
+		{
+			gameOver();
+		}
+
+
+        if (touch.phase == TouchPhase.Began)
         {
             initialPosition = new Vector2(x, y);
             polarOpposite = new Vector2(-x, -y);
@@ -61,23 +71,28 @@ public class Tracking : MonoBehaviour
         }
         else if (touch.phase == TouchPhase.Moved)
         {
-            if (!hasPassedHalfway && Vector2.Distance(polarOpposite, touchPosition) <= 1f) {
+            if (!hasPassedHalfway && Vector2.Distance(polarOpposite, touchPosition) <= 1f)
+            {
                 hasPassedHalfway = true;
-			}
+            }
 
-            if (hasPassedHalfway && Vector2.Distance(touchPosition, initialPosition) <= 0.5f) {
+            if (hasPassedHalfway && Vector2.Distance(touchPosition, initialPosition) <= 0.5f)
+            {
                 hasPassedHalfway = false;
-                if (maxDiff >= 1f) {
+                if (maxDiff >= 1f)
+                {
                     score += 1;
-				} else {
+                }
+                else
+                {
                     score += 5;
-				}
+                }
                 scoreText.text = getTextScore(score);
-			}
+            }
         }
         else if (touch.phase == TouchPhase.Ended)
         {
-            restartPanel.SetActive(true);
+            gameOver();
         }
     }
 }

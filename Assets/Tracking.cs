@@ -13,9 +13,15 @@ public class Tracking : MonoBehaviour
     bool hasPassedHalfway = false;
 
     public Text scoreText;
+    public Text helpText;
     int score = 0;
 
+    bool isStopped = false;
+
     public GameObject restartPanel;
+
+    //public GameObject effect;
+    //List<GameObject> trail;
 
     string getTextScore(int points) {
         return $"Score: {points:0000}";
@@ -27,7 +33,7 @@ public class Tracking : MonoBehaviour
 
     void Update()
     {
-        if (Input.touchCount <= 0)
+        if (Input.touchCount <= 0 || isStopped)
         {
             return;
         }
@@ -51,6 +57,7 @@ public class Tracking : MonoBehaviour
         {
             initialPosition = new Vector2(x, y);
             polarOpposite = new Vector2(-x, -y);
+            helpText.text = "";
         }
         else if (touch.phase == TouchPhase.Moved)
         {
@@ -70,7 +77,6 @@ public class Tracking : MonoBehaviour
         }
         else if (touch.phase == TouchPhase.Ended)
         {
-            Time.timeScale = 0;
             restartPanel.SetActive(true);
         }
     }

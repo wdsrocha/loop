@@ -41,8 +41,6 @@ public class Tracking : MonoBehaviour
 
         float diff = Mathf.Abs(x * x + y * y - r * r);
 
-        //Debug.Log($"({x},{y}); diff = {diff}");
-
         maxDiff = Mathf.Max(maxDiff, diff);
 
         if (diff >= 2f) {
@@ -53,8 +51,6 @@ public class Tracking : MonoBehaviour
         {
             initialPosition = new Vector2(x, y);
             polarOpposite = new Vector2(-x, -y);
-			//Debug.Log("Touch phase began");
-			//Debug.Log($"polarOpposite = ({polarOpposite.x}, {polarOpposite.y})");
         }
         else if (touch.phase == TouchPhase.Moved)
         {
@@ -74,6 +70,7 @@ public class Tracking : MonoBehaviour
         }
         else if (touch.phase == TouchPhase.Ended)
         {
+            Time.timeScale = 0;
             restartPanel.SetActive(true);
         }
     }

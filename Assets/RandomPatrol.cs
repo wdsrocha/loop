@@ -26,6 +26,7 @@ public class RandomPatrol : MonoBehaviour
 
     void Update()
     {
+        return;
         if ((Vector2)transform.position != targetPosition)
         {
             float speed = Mathf.Lerp(MIN_SPEED, MAX_SPEED, GetDifficultyPercent());

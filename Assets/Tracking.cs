@@ -1,22 +1,23 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class Tracking : MonoBehaviour
 {
-    Collider2D col;
     float maxDiff;
-    float minDiff;
 
     Vector2 initialPosition;
 
     Vector2 polarOpposite;
     bool hasPassedHalfway = false;
 
-    void Start()
-    {
-        col = GetComponent<Collider2D>();
-    }
+    public Text scoreText;
+    int score = 0;
+
+    public GameObject restartPanel;
+
+    void Start() { }
 
     void Update()
     {
@@ -24,6 +25,8 @@ public class Tracking : MonoBehaviour
         {
             return;
         }
+
+
 
         Touch touch = Input.GetTouch(0);
         Vector2 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
@@ -36,36 +39,38 @@ public class Tracking : MonoBehaviour
 
         //Debug.Log($"({x},{y}); diff = {diff}");
 
-        if (diff >= 2f) {
-            //Debug.Log("Falhou");
-		} else if (diff >= 1f) { 
-            //Debug.Log("Mais ou menos");
-		} else { 
-            //Debug.Log("Perfeito");
-		}
+        maxDiff = Mathf.Max(maxDiff, diff);
 
-        if (touch.phase == TouchPhase.Began)
+        if (diff >= 2f) {
+            restartPanel.SetActive(true);
+        }
+		
+		if (touch.phase == TouchPhase.Began)
         {
             initialPosition = new Vector2(x, y);
             polarOpposite = new Vector2(-x, -y);
-			Debug.Log("Touch phase began");
-			Debug.Log($"polarOpposite = ({polarOpposite.x}, {polarOpposite.y})");
+			//Debug.Log("Touch phase began");
+			//Debug.Log($"polarOpposite = ({polarOpposite.x}, {polarOpposite.y})");
         }
         else if (touch.phase == TouchPhase.Moved)
         {
             if (!hasPassedHalfway && Vector2.Distance(polarOpposite, touchPosition) <= 1f) {
                 hasPassedHalfway = true;
-                Debug.Log("passed halfway");
 			}
 
             if (hasPassedHalfway && Vector2.Distance(touchPosition, initialPosition) <= 0.5f) {
                 hasPassedHalfway = false;
-                Debug.Log("Completed");
+                if (maxDiff >= 1f) {
+                    score += 50;
+				} else {
+                    score += 100;
+				}
+                scoreText.text = $"Score: {score}";
 			}
         }
         else if (touch.phase == TouchPhase.Ended)
         {
-            //Debug.Log("Falhou");
+            restartPanel.SetActive(true);
         }
     }
 }

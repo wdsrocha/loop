@@ -17,7 +17,13 @@ public class Tracking : MonoBehaviour
 
     public GameObject restartPanel;
 
-    void Start() { }
+    string getTextScore(int points) {
+        return $"Score: {points:0000}";
+	}
+
+    void Start() {
+        scoreText.text = getTextScore(0);
+	 }
 
     void Update()
     {
@@ -25,8 +31,6 @@ public class Tracking : MonoBehaviour
         {
             return;
         }
-
-
 
         Touch touch = Input.GetTouch(0);
         Vector2 touchPosition = Camera.main.ScreenToWorldPoint(touch.position);
@@ -61,11 +65,11 @@ public class Tracking : MonoBehaviour
             if (hasPassedHalfway && Vector2.Distance(touchPosition, initialPosition) <= 0.5f) {
                 hasPassedHalfway = false;
                 if (maxDiff >= 1f) {
-                    score += 50;
+                    score += 1;
 				} else {
-                    score += 100;
+                    score += 5;
 				}
-                scoreText.text = $"Score: {score}";
+                scoreText.text = getTextScore(score);
 			}
         }
         else if (touch.phase == TouchPhase.Ended)
